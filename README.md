@@ -1,4 +1,4 @@
-# Distributed-Edge-Inference
+# DEFER: Distributed Edge Inference for Deep Neural Networks
 Performing model inference across multiple edge devices
 
-To run the example, execute the three Jupyter notebooks simultaneously.
+To use DEFER, run `node.py` on a compute node, and import the `DEFER` class into your main program on the dispatcher node.
