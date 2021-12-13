@@ -40,8 +40,8 @@ class NodeState:
         with self._lock:
             self._weights = w
     
-def socket_send(json, sock: socket.socket, chunk_size: int):
-    size = len(json)
+def socket_send(bytes, sock: socket.socket, chunk_size: int):
+    size = len(bytes)
     size_bytes = size.to_bytes(8, 'big')
     while len(size_bytes) > 0:
         try:
@@ -52,11 +52,11 @@ def socket_send(json, sock: socket.socket, chunk_size: int):
                     raise e
                 #print(f"Blocking w/ {len(size_bytes)} left in size array")
                 select.select([], [sock], [])
-    for i in range(0, len(json), chunk_size):
-        if len(json) - i < chunk_size:
-            chunk = json[i:]
+    for i in range(0, len(bytes), chunk_size):
+        if len(bytes) - i < chunk_size:
+            chunk = bytes[i:]
         else:
-            chunk = json[i:i+chunk_size]
+            chunk = bytes[i:i+chunk_size]
         while len(chunk) > 0:
             try:
                 cs = sock.send(chunk)
@@ -93,7 +93,6 @@ def socket_recv(sock: socket.socket, chunk_size: int):
             left -= len(recv)
             data_json[data_counter:data_counter+len(recv)] = recv
             data_counter += len(recv)
-            #data_json += recv
             #print("Data left to process: ", left)
         except socket.error as e:
             if e.errno != socket.EAGAIN:
